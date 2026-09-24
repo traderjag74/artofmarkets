@@ -37,7 +37,7 @@ export default async function CoursePage({ params }: { params: Promise<{ course:
             {done.size === 0 ? "Start the first lesson" : done.size === lessons.length ? "Review from the start" : "Continue"}
           </Link>
         </div>
-        <ol className="stack" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <ol className="stack" style={{ listStyle: "none", padding: 0, marginBottom: 0 }}>
           {lessons.map((l, i) => (
             <li key={l.slug} className="card cluster" style={{ justifyContent: "space-between" }}>
               <div className="stack stack-s">

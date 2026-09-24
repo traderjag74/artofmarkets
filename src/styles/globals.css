@@ -142,6 +142,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   outline-offset: 2px;
 }
 ::selection { background: var(--c-accent-soft); }
+dl, dd, figure { margin: 0; }
 hr { border: 0; border-top: var(--border); margin: var(--s-6) 0; }
 table { border-collapse: collapse; width: 100%; }
 code, kbd, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }

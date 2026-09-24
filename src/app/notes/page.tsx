@@ -13,7 +13,7 @@ export default function NotesPage() {
           <h1 style={{ fontSize: "var(--step-4)" }}>From the journal</h1>
           <p className="lede muted">Short notes on process, risk and review. Never trade calls.</p>
         </div>
-        <ul className="stack stack-l" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        <ul className="stack stack-l" style={{ listStyle: "none", padding: 0, marginBottom: 0 }}>
           {NOTES.map((n) => (
             <li key={n.slug} className="stack stack-s rule-top" style={{ paddingTop: "var(--s-5)" }}>
               <p className="eyebrow num">{n.date} · {n.author}</p>

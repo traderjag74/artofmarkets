@@ -23,10 +23,10 @@ export default async function AdminOverview() {
           {!process.env.RESEND_API_KEY && "Emails are not being sent (no RESEND_API_KEY); they're stored under Emails."}
         </p>
       )}
-      <dl className="grid grid-4" style={{ margin: 0 }}>
-        <div className="stat card"><dt className="stat-label">Students</dt><dd className="stat-value" style={{ margin: 0 }}>{students}</dd></div>
-        <div className="stat card"><dt className="stat-label">New students, 30 days</dt><dd className="stat-value" style={{ margin: 0 }}>{newStudents}</dd></div>
-        <div className="stat card"><dt className="stat-label">Open requests</dt><dd className="stat-value" style={{ margin: 0 }}><Link href="/admin/requests">{requests}</Link></dd></div>
+      <dl className="grid grid-4">
+        <div className="stat card"><dt className="stat-label">Students</dt><dd className="stat-value">{students}</dd></div>
+        <div className="stat card"><dt className="stat-label">New students, 30 days</dt><dd className="stat-value">{newStudents}</dd></div>
+        <div className="stat card"><dt className="stat-label">Open requests</dt><dd className="stat-value"><Link href="/admin/requests">{requests}</Link></dd></div>
         <div className="stat card">
           <dt className="stat-label">Revenue, 30 days</dt>
           <dd className="stat-value" style={{ margin: 0, fontSize: "var(--data-1)" }}>

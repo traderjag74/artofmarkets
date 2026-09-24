@@ -123,29 +123,29 @@ export function EdgeSimulator() {
             </div>
             <div className="stat">
               <dt className="stat-label">Expectancy per trade</dt>
-              <dd className={`stat-value ${edgePositive ? "accent" : "loss"}`} style={{ margin: 0 }}>{r(result.expectancyR)}</dd>
+              <dd className={`stat-value ${edgePositive ? "accent" : "loss"}`}>{r(result.expectancyR)}</dd>
             </div>
             <div className="stat">
               <dt className="stat-label">Median ending balance (from 10,000)</dt>
-              <dd className="stat-value" style={{ margin: 0 }}>{balance(result.medianEnd)}</dd>
+              <dd className="stat-value">{balance(result.medianEnd)}</dd>
             </div>
             <div className="stat">
               <dt className="stat-label">Median worst drawdown</dt>
-              <dd className="stat-value" style={{ margin: 0 }}>{pct(result.medianMaxDD)}</dd>
+              <dd className="stat-value">{pct(result.medianMaxDD)}</dd>
             </div>
             <div className="stat">
               <dt className="stat-label">Bad-luck drawdown (1 in 20)</dt>
-              <dd className="stat-value" style={{ margin: 0 }}>{pct(result.p95MaxDD)}</dd>
+              <dd className="stat-value">{pct(result.p95MaxDD)}</dd>
             </div>
             <div className="stat" style={{ gridColumn: "1 / -1" }}>
               <dt className="stat-label">Longest losing streak to expect</dt>
-              <dd className="stat-value" style={{ margin: 0 }}>{Math.round(result.medianLongestLosingStreak)} <span className="small muted" style={{ fontFamily: "var(--font-body)" }}>losses in a row</span></dd>
+              <dd className="stat-value">{Math.round(result.medianLongestLosingStreak)} <span className="small muted" style={{ fontFamily: "var(--font-body)" }}>losses in a row</span></dd>
             </div>
           </dl>
         </div>
 
         {/* Chart */}
-        <figure className="stack stack-s" style={{ margin: 0 }}>
+        <figure className="stack stack-s">
           <div className="cluster" style={{ justifyContent: "space-between" }}>
             <figcaption className="figure-caption">
               {S.paths} simulated accounts · {deferred.trades} trades each ·{" "}

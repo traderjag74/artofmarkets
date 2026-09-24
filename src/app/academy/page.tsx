@@ -40,11 +40,11 @@ export default async function AcademyPage() {
                 <p className="eyebrow">Step {p.step}</p>
                 <h2 id={`${p.slug}-title`} style={{ fontSize: "var(--step-3)" }}>{p.name}</h2>
                 <p className="lede">{p.summary}</p>
-                <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)", margin: 0 }}>
-                  <dt className="muted small">Format</dt><dd className="small" style={{ margin: 0 }}>{p.format}</dd>
-                  <dt className="muted small">Length</dt><dd className="small" style={{ margin: 0 }}>{p.length}</dd>
+                <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)" }}>
+                  <dt className="muted small">Format</dt><dd className="small">{p.format}</dd>
+                  <dt className="muted small">Length</dt><dd className="small">{p.length}</dd>
                   <dt className="muted small">Price</dt>
-                  <dd className="small num" style={{ margin: 0 }}>
+                  <dd className="small num">
                     {p.priceUsd === 0 ? "Free" : `${formatMoney(p.priceUsd, "USD")} or ${formatMoney(p.priceLkr, "LKR")}${p.kind === "MEMBERSHIP" ? " per month" : ""}`}
                   </dd>
                 </dl>

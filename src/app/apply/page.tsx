@@ -30,11 +30,11 @@ export default async function ApplyPage({ searchParams }: { searchParams: Promis
             <p className="eyebrow">Your simulator profile</p>
             {profile ? (
               <>
-                <dl className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "var(--s-2) var(--s-4)", margin: 0 }}>
-                  <dt className="stat-label">Win rate</dt><dd className="num" style={{ margin: 0 }}>{Math.round(profile.winRate * 100)}%</dd>
-                  <dt className="stat-label">Average win</dt><dd className="num" style={{ margin: 0 }}>{profile.avgWinR.toFixed(1)}R</dd>
-                  <dt className="stat-label">Risk per trade</dt><dd className="num" style={{ margin: 0 }}>{profile.riskPct.toFixed(2)}%</dd>
-                  <dt className="stat-label">Trades</dt><dd className="num" style={{ margin: 0 }}>{profile.trades}</dd>
+                <dl className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "var(--s-2) var(--s-4)" }}>
+                  <dt className="stat-label">Win rate</dt><dd className="num">{Math.round(profile.winRate * 100)}%</dd>
+                  <dt className="stat-label">Average win</dt><dd className="num">{profile.avgWinR.toFixed(1)}R</dd>
+                  <dt className="stat-label">Risk per trade</dt><dd className="num">{profile.riskPct.toFixed(2)}%</dd>
+                  <dt className="stat-label">Trades</dt><dd className="num">{profile.trades}</dd>
                 </dl>
                 <MiniFan profile={profile} />
                 <p className="tiny muted">Hypothetical, simulated results; not the results of any real account. We'll use this to understand how you think about risk, and we'll attach it to your request.</p>

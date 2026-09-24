@@ -49,10 +49,10 @@ export default async function CheckoutPage({ params }: { params: Promise<{ slug:
           <p className="eyebrow">Checkout</p>
           <h1 style={{ fontSize: "var(--step-4)" }}>{info.name}</h1>
           <p className="lede muted">{info.summary}</p>
-          <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)", margin: 0 }}>
-            <dt className="muted small">Format</dt><dd className="small" style={{ margin: 0 }}>{info.format}</dd>
-            <dt className="muted small">Length</dt><dd className="small" style={{ margin: 0 }}>{info.length}</dd>
-            <dt className="muted small">Price</dt><dd className="num" style={{ margin: 0 }}>{priceLabel}</dd>
+          <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)" }}>
+            <dt className="muted small">Format</dt><dd className="small">{info.format}</dd>
+            <dt className="muted small">Length</dt><dd className="small">{info.length}</dd>
+            <dt className="muted small">Price</dt><dd className="num">{priceLabel}</dd>
           </dl>
           <p className="small muted">Not sure yet? <Link href={`/apply?interest=${slug}`}>Ask the desk a question first</Link>.</p>
         </div>

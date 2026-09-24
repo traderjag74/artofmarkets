@@ -15,7 +15,7 @@ export function LiveList({ sessions }: { sessions: LiveSession[] }) {
     return <p className="muted">The next sessions will be announced soon. Subscribe on YouTube to get notified.</p>;
   }
   return (
-    <ul className="stack" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+    <ul className="stack" style={{ listStyle: "none", padding: 0, marginBottom: 0 }}>
       {sessions.map((s) => (
         <li key={s.id} className="card-flat stack stack-s">
           <p className="eyebrow num">{fmt.format(s.startsAt)}</p>

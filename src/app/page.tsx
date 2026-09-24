@@ -114,7 +114,7 @@ export default async function HomePage() {
               ))}
             </div>
           </div>
-          <figure className="stack stack-s" style={{ margin: 0 }}>
+          <figure className="stack stack-s">
             <dl className="journal" aria-label="Sample journal entry">
               <div className="journal-row"><dt>Date</dt><dd className="num">2026-06-18 (historical)</dd></div>
               <div className="journal-row"><dt>Market</dt><dd>Equity index future, 1-hour chart</dd></div>
@@ -161,15 +161,15 @@ export default async function HomePage() {
             <p className="eyebrow">Who teaches</p>
             <h2 id="trust-title">A small desk that trades its own capital, and teaches what it does.</h2>
           </div>
-          <dl className="grid grid-4" style={{ margin: 0 }}>
-            <div className="stat"><dt className="stat-label">Years trading on the desk</dt><dd className="stat-value" style={{ margin: 0 }}>{CONFIG.proof.yearsTrading}</dd></div>
-            <div className="stat"><dt className="stat-label">Students taught</dt><dd className="stat-value" style={{ margin: 0 }}>{CONFIG.proof.studentsTaught}</dd></div>
-            <div className="stat"><dt className="stat-label">{CONFIG.proof.reviewPlatform}</dt><dd className="stat-value" style={{ margin: 0 }}>{CONFIG.proof.reviewScore} / 5 <span className="small">({CONFIG.proof.reviewCount})</span></dd></div>
-            <div className="stat"><dt className="stat-label">Regulatory status</dt><dd style={{ margin: 0 }} className="small">{CONFIG.risk.regulator ? `${CONFIG.risk.regulator.name} · ${CONFIG.risk.regulator.licence}` : "Education provider. Not a licensed investment adviser. We don't manage money. [Placeholder: confirm with counsel]"}</dd></div>
+          <dl className="grid grid-4">
+            <div className="stat"><dt className="stat-label">Years trading on the desk</dt><dd className="stat-value">{CONFIG.proof.yearsTrading}</dd></div>
+            <div className="stat"><dt className="stat-label">Students taught</dt><dd className="stat-value">{CONFIG.proof.studentsTaught}</dd></div>
+            <div className="stat"><dt className="stat-label">{CONFIG.proof.reviewPlatform}</dt><dd className="stat-value">{CONFIG.proof.reviewScore} / 5 <span className="small">({CONFIG.proof.reviewCount})</span></dd></div>
+            <div className="stat"><dt className="stat-label">Regulatory status</dt><dd className="small">{CONFIG.risk.regulator ? `${CONFIG.risk.regulator.name} · ${CONFIG.risk.regulator.licence}` : "Education provider. Not a licensed investment adviser. We don't manage money. [Placeholder: confirm with counsel]"}</dd></div>
           </dl>
           <div className="grid grid-3">
             {CONFIG.testimonials.map((t) => (
-              <figure key={t.quote} className="card-flat stack stack-s" style={{ margin: 0 }}>
+              <figure key={t.quote} className="card-flat stack stack-s">
                 <blockquote style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "var(--step-1)", lineHeight: "var(--lh-snug)" }}>“{t.quote}”</blockquote>
                 <figcaption className="small muted">{t.name} · {t.programme}. Individual experience about the teaching; not a claim about trading results.</figcaption>
               </figure>
@@ -195,7 +195,7 @@ export default async function HomePage() {
           <div className="stack stack-l">
             <p className="eyebrow">Desk notes</p>
             <h2 style={{ fontSize: "var(--step-3)" }}>From the journal</h2>
-            <ul className="stack" style={{ listStyle: "none", padding: 0, margin: 0 }}>
+            <ul className="stack" style={{ listStyle: "none", padding: 0, marginBottom: 0 }}>
               {NOTES.map((n) => (
                 <li key={n.slug} className="stack stack-s rule-top" style={{ paddingTop: "var(--s-4)" }}>
                   <p className="eyebrow num">{n.date} · {n.author}</p>

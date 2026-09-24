@@ -13,7 +13,7 @@ export function ExpectancyGrid() {
   const nearestR = RR.reduce((a, b) => (Math.abs(b - sim.avgWinR) < Math.abs(a - sim.avgWinR) ? b : a));
 
   return (
-    <figure className="stack stack-s" style={{ margin: 0 }}>
+    <figure className="stack stack-s">
       <div className="table-wrap">
         <table className="table" style={{ tableLayout: "fixed", minWidth: "36rem", fontSize: "var(--data-n2)" }}>
           <caption className="sr-only">Expectancy per trade in R, for each win rate and average win (after {sim.costR.toFixed(2)}R costs)</caption>

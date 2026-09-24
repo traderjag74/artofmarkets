@@ -18,10 +18,10 @@ export default async function MockCheckout({ searchParams }: { searchParams: Pro
         <p className="badge badge-loss">Test mode</p>
         <h1 style={{ fontSize: "var(--step-3)" }}>Simulated payment page</h1>
         <p className="muted">This page stands in for the payment provider in development. No money moves.</p>
-        <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)", margin: 0 }}>
-          <dt className="muted small">Order</dt><dd className="num" style={{ margin: 0 }}>{order.reference}</dd>
-          <dt className="muted small">Item</dt><dd style={{ margin: 0 }}>{order.product.name}</dd>
-          <dt className="muted small">Amount</dt><dd className="num" style={{ margin: 0 }}>{formatMoney(order.amount, order.currency)}</dd>
+        <dl className="grid" style={{ gridTemplateColumns: "auto 1fr", gap: "var(--s-2) var(--s-4)" }}>
+          <dt className="muted small">Order</dt><dd className="num">{order.reference}</dd>
+          <dt className="muted small">Item</dt><dd>{order.product.name}</dd>
+          <dt className="muted small">Amount</dt><dd className="num">{formatMoney(order.amount, order.currency)}</dd>
         </dl>
         <form action={mockPay} className="cluster">
           <input type="hidden" name="ref" value={order.reference} />
