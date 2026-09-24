@@ -1,0 +1,235 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum TokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+enum ProductKind {
+  COURSE
+  COHORT
+  MEMBERSHIP
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum EnrollmentSource {
+  FREE
+  ORDER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  NEW
+  CONTACTED
+  ENROLLED
+  CLOSED
+}
+
+enum EmailStatus {
+  SENT
+  LOGGED
+  FAILED
+}
+
+model User {
+  id              String       @id @default(cuid())
+  email           String       @unique
+  name            String
+  passwordHash    String
+  role            Role         @default(STUDENT)
+  country         String?
+  experience      String?
+  emailVerifiedAt DateTime?
+  marketingOptIn  Boolean      @default(false)
+  riskAckAt       DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  sessions        Session[]
+  tokens          AuthToken[]
+  orders          Order[]
+  enrollments     Enrollment[]
+  progress        LessonProgress[]
+  applications    Application[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AuthToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  type      TokenType
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, type])
+}
+
+/// Products are seeded from src/config/site.ts (CONFIG.products). The slug is the stable key.
+model Product {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  name        String
+  kind        ProductKind
+  priceUsd    Int          /// cents
+  priceLkr    Int          /// cents
+  active      Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  cohorts     Cohort[]
+  orders      Order[]
+  enrollments Enrollment[]
+}
+
+model Cohort {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  productId   String
+  product     Product      @relation(fields: [productId], references: [id])
+  name        String
+  startsAt    DateTime
+  endsAt      DateTime
+  seats       Int
+  open        Boolean      @default(true)
+  orders      Order[]
+  enrollments Enrollment[]
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  reference    String      @unique
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  productId    String
+  product      Product     @relation(fields: [productId], references: [id])
+  cohortId     String?
+  cohort       Cohort?     @relation(fields: [cohortId], references: [id])
+  amount       Int         /// cents, in `currency`
+  currency     String
+  status       OrderStatus @default(PENDING)
+  provider     String
+  providerRef  String?
+  subscription String?     /// provider subscription id for memberships
+  rawEvent     Json?
+  createdAt    DateTime    @default(now())
+  paidAt       DateTime?
+  updatedAt    DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Enrollment {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product          @relation(fields: [productId], references: [id])
+  cohortId  String?
+  cohort    Cohort?          @relation(fields: [cohortId], references: [id])
+  source    EnrollmentSource
+  orderId   String?
+  active    Boolean          @default(true)
+  expiresAt DateTime?        /// memberships only
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([userId, productId])
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseSlug  String
+  lessonSlug  String
+  completedAt DateTime @default(now())
+
+  @@unique([userId, courseSlug, lessonSlug])
+}
+
+model Application {
+  id            String            @id @default(cuid())
+  reference     String            @unique
+  userId        String?
+  user          User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name          String
+  email         String
+  country       String
+  experience    String
+  markets       String[]
+  hoursPerWeek  String
+  goal          String
+  contactMoment String
+  interest      String            /// product slug or "intro-call"
+  message       String?
+  simProfile    Json?
+  riskAck       Boolean
+  status        ApplicationStatus @default(NEW)
+  adminNote     String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([status])
+}
+
+model LiveSession {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  startsAt    DateTime
+  youtubeUrl  String
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model EmailLog {
+  id         String      @id @default(cuid())
+  to         String
+  subject    String
+  template   String
+  html       String
+  text       String
+  status     EmailStatus
+  providerId String?
+  error      String?
+  createdAt  DateTime    @default(now())
+
+  @@index([createdAt])
+}
+
+model RateLimit {
+  key       String   @id
+  count     Int
+  resetAt   DateTime
+}
