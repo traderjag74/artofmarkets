@@ -80,3 +80,15 @@ Four steps, from free to monthly:
 4. **Monthly membership:** Desk Mentorship.
 
 Cohort courses in this market commonly sell for $2,000–5,000 and self-paced courses for $497–1,997. Alumni subscriptions are often priced at 10–20% of the main course. The prices in CONFIG sit well below those benchmarks, to suit a South Asian and global audience, and are paid in LKR through PayHere for Sri Lanka. Signals, copy trading and broker referral deals were left out deliberately, for regulatory and independence reasons.
+
+## Static preview (private claude.ai link)
+
+`preview-build/` turns the running site into one self-contained HTML page for sharing a clickable preview before deployment. It snapshots every page and remounts the interactive parts (simulator, grid, 3D surface, shader) from an esbuild bundle. Forms don't submit in the preview.
+
+```bash
+npm run build && npm start   # site running on :3000, seeded, with a demo student and the admin
+./node_modules/.bin/esbuild preview-build/entry.tsx --bundle --minify --format=iife --jsx=automatic \
+  --alias:next/link=./preview-build/link-shim.tsx --define:process.env.NODE_ENV='"production"' --outfile=<dir>/bundle.js
+# write <dir>/snap.json with the page snapshots (see preview-build/assemble.mjs for the shape), then:
+node preview-build/assemble.mjs <dir>
+```
