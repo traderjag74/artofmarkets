@@ -2,6 +2,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/money";
 import { dt } from "./fmt";
+import { paymentMode } from "@/lib/payments";
 
 export default async function AdminOverview() {
   const since = new Date(Date.now() - 30 * 86400_000);
@@ -13,13 +14,14 @@ export default async function AdminOverview() {
     db.order.findMany({ where: { status: "PAID" }, orderBy: { paidAt: "desc" }, take: 8, include: { user: true, product: true } }),
     db.emailLog.count({ where: { status: "FAILED", createdAt: { gte: since } } }),
   ]);
-  const provider = process.env.PAYMENT_PROVIDER ?? "mock";
+  const provider = paymentMode();
   return (
     <div className="stack stack-xl">
       <h1 style={{ fontSize: "var(--step-3)" }}>Overview</h1>
-      {(provider === "mock" || !process.env.RESEND_API_KEY) && (
+      {(provider !== "payhere" || !process.env.RESEND_API_KEY) && (
         <p className="notice notice-risk">
-          {provider === "mock" && "Payments are in TEST mode (PAYMENT_PROVIDER=mock). "}
+          {provider === "mock" && "Payments are in TEST mode: no real money is taken. "}
+          {provider === "off" && "Payments are switched off: paid programmes show \"opening soon\". "}
           {!process.env.RESEND_API_KEY && "Emails are not being sent (no RESEND_API_KEY); they're stored under Emails."}
         </p>
       )}

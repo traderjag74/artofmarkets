@@ -30,16 +30,31 @@ npm test                          # simulator engine + PayHere signature tests
 
 Log in as the admin with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env`. With `PAYMENT_PROVIDER=mock`, checkout goes to a test page where you can simulate a successful or declined payment.
 
-## Go live (Vercel + Neon/Supabase + PayHere + Resend)
+## Go live on artofmarkets.com
 
-1. **Database:** create a Postgres database on Neon or Supabase and copy its connection string.
-2. **Vercel:** import this repo and set these environment variables:
-   `APP_URL=https://artofmarkets.com`, `DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `PAYMENT_PROVIDER=payhere`, `PAYHERE_MERCHANT_ID`, `PAYHERE_MERCHANT_SECRET`, `PAYHERE_SANDBOX=true` (switch to `false` after testing), `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`.
-   Set the build command to `npx prisma migrate deploy && npm run build`.
-3. **Seed once:** run `DATABASE_URL=… ADMIN_EMAIL=… ADMIN_PASSWORD=… npm run db:seed` locally against the production database.
-4. **PayHere:** open a merchant account (<https://www.payhere.lk>), add `artofmarkets.com` as an approved domain, and copy the Merchant ID and the domain's Merchant Secret. Apply for **recurring payments** for the monthly membership. Test in the sandbox with PayHere's test cards first.
-5. **Resend:** verify the `artofmarkets.com` domain (SPF and DKIM DNS records) and create an API key.
-6. **Domain:** point artofmarkets.com to Vercel.
+Every push to `main` deploys automatically. Vercel runs `npm run vercel-build`, which applies database migrations, syncs products and cohorts from CONFIG, creates the admin account the first time, and builds the site.
+
+1. **Database (Neon):** create a project in region *AWS Asia Pacific (Singapore)*. Copy two connection strings: the **pooled** one (for `DATABASE_URL`) and the **direct** one (for `DIRECT_URL`).
+2. **Vercel:** import `traderjag74/artofmarkets` and add these environment variables (Production):
+
+   | Variable | Value |
+   |---|---|
+   | `APP_URL` | `https://artofmarkets.com` |
+   | `DATABASE_URL` / `DIRECT_URL` | from Neon |
+   | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | your admin login (password ≥ 12 characters) |
+   | `PAYMENT_PROVIDER` | `off` until PayHere is approved, then `payhere` |
+   | `PAYHERE_MERCHANT_ID` / `PAYHERE_MERCHANT_SECRET` / `PAYHERE_SANDBOX` | from PayHere (`true` while testing) |
+   | `RESEND_API_KEY` / `EMAIL_FROM` / `EMAIL_REPLY_TO` | from Resend |
+
+   Functions run in Singapore (`vercel.json`), next to the database. A commercial site needs Vercel's Pro plan.
+3. **Domain:** in Vercel → Project → Settings → Domains, add `artofmarkets.com` and `www.artofmarkets.com`, then create the DNS records Vercel shows at your domain registrar.
+4. **Email (Resend):** add the domain `artofmarkets.com` and create the DNS records it shows (SPF, DKIM). Once it's verified, create an API key and set `RESEND_API_KEY`.
+5. **Payments (PayHere):** apply for a business merchant account (you need your company registration), add `artofmarkets.com` as a domain, and apply for recurring billing for the membership. Test with `PAYHERE_SANDBOX=true` and PayHere's test cards, then switch to the live credentials and `PAYHERE_SANDBOX=false`.
+
+`PAYMENT_PROVIDER` controls checkout:
+- `off`: paid programmes show "opening soon" with an intro-call button. This is the default in production.
+- `payhere`: real card payments.
+- `mock`: fake payments for testing. In production this also needs `ALLOW_TEST_PAYMENTS=true`, so nobody gets free access by accident.
 
 ## Where to change things
 

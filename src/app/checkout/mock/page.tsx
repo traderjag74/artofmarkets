@@ -3,11 +3,12 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { formatMoney } from "@/lib/money";
 import { mockPay } from "../actions";
+import { paymentMode } from "@/lib/payments";
 
 export const metadata = { title: "Test payment", robots: { index: false } };
 
 export default async function MockCheckout({ searchParams }: { searchParams: Promise<{ ref?: string }> }) {
-  if ((process.env.PAYMENT_PROVIDER ?? "mock") !== "mock") notFound();
+  if (paymentMode() !== "mock") notFound();
   const { ref = "" } = await searchParams;
   const user = await requireUser();
   const order = await db.order.findUnique({ where: { reference: ref }, include: { product: true } });

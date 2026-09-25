@@ -8,6 +8,7 @@ import { currencyForCountry, formatMoney } from "@/lib/money";
 import { productBySlug } from "@/config/site";
 import { CheckoutForm } from "./CheckoutForm";
 import { ResendVerification } from "@/components/ResendVerification";
+import { paymentMode } from "@/lib/payments";
 
 export const metadata: Metadata = { title: "Checkout", robots: { index: false } };
 const dateFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Colombo" });
@@ -37,8 +38,8 @@ export default async function CheckoutPage({ params }: { params: Promise<{ slug:
       return { id: c.id, full: left <= 0, label: `${c.name} · starts ${dateFmt.format(c.startsAt)} · ${left > 0 ? `${left} seats left` : "full"}` };
     });
   }
-  const mock = (process.env.PAYMENT_PROVIDER ?? "mock") === "mock";
-  const providerNote = mock
+  const mode = paymentMode();
+  const providerNote = mode === "mock"
     ? "Test mode: no real payment will be taken."
     : `You'll be taken to PayHere's secure page to pay by card in ${currency}.${product.kind === "MEMBERSHIP" ? " The membership renews monthly until you cancel." : ""}`;
 
@@ -57,7 +58,13 @@ export default async function CheckoutPage({ params }: { params: Promise<{ slug:
           <p className="small muted">Not sure yet? <Link href={`/apply?interest=${slug}`}>Ask the desk a question first</Link>.</p>
         </div>
         <div className="panel" style={{ padding: "var(--s-6)" }}>
-          {cohorts && cohorts.every((c) => c.full) ? (
+          {mode === "off" ? (
+            <div className="stack">
+              <p className="badge">Opening soon</p>
+              <p>Online enrolment for {info.name} opens shortly. Book a short intro call and we'll reserve your place and send the details.</p>
+              <Link href={`/apply?interest=${slug}`} className="btn btn-primary" style={{ width: "fit-content" }}>Book an intro call</Link>
+            </div>
+          ) : cohorts && cohorts.every((c) => c.full) ? (
             <p>All upcoming cohorts are full. <Link href={`/apply?interest=${slug}`}>Join the waiting list</Link>.</p>
           ) : !user.emailVerifiedAt ? (
             <div className="stack">

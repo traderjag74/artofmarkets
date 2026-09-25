@@ -8,7 +8,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { newReference } from "@/lib/tokens";
 import { currencyForCountry } from "@/lib/money";
 import { countryName } from "@/lib/countries";
-import { activeProvider, type CheckoutAction } from "@/lib/payments";
+import { activeProvider, paymentMode, type CheckoutAction } from "@/lib/payments";
 import { fulfilOrder, markOrder } from "@/lib/payments/fulfil";
 
 export type CheckoutState = { error?: string; action?: CheckoutAction };
@@ -16,6 +16,7 @@ export type CheckoutState = { error?: string; action?: CheckoutAction };
 export async function startCheckout(_: CheckoutState, form: FormData): Promise<CheckoutState> {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  if (paymentMode() === "off") return { error: "Enrolment isn't open yet. Please book an intro call instead." };
   if (!user.emailVerifiedAt) return { error: "Please confirm your email address first." };
   if (form.get("terms") !== "on") return { error: "Please accept the terms and refund policy." };
   if (!(await rateLimit(`checkout:${user.id}`, 10, 3600))) return { error: "Too many checkout attempts. Please try again later." };
@@ -63,9 +64,9 @@ export async function startCheckout(_: CheckoutState, form: FormData): Promise<C
   return { action };
 }
 
-/** Local test checkout only (PAYMENT_PROVIDER=mock). */
+/** Test checkout only (see paymentMode). */
 export async function mockPay(form: FormData): Promise<void> {
-  if ((process.env.PAYMENT_PROVIDER ?? "mock") !== "mock") throw new Error("Mock payments are disabled");
+  if (paymentMode() !== "mock") throw new Error("Test payments are disabled");
   const user = await getCurrentUser();
   if (!user) redirect("/login");
   const ref = String(form.get("ref") ?? "");
